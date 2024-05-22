@@ -10,7 +10,10 @@
 开发环境用python3.11，注意环境安装正确。
 ```sh
 python3.11 -m venv venv
-pip3 install -r ./deps.txt
+cd ./venv/Scripts
+./activate.bat
+pip3.11 install pyinstaller
+pip3.11 install -r ./deps.txt
 ```
 ## Build
 ```sh

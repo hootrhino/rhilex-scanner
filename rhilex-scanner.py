@@ -18,7 +18,7 @@ class HostScannerApp:
 
     def __init__(self, master):
         self.master = master
-        self.master.title("RULEX 网关扫描器")
+        self.master.title("RHILEX 扫描器")
 
         self.subnet_label = tk.Label(self.master, text="本地网络:")
         self.subnet_label.pack(pady=5, anchor="w")
