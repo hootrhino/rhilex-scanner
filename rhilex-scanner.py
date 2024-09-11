@@ -18,7 +18,7 @@ class HostScannerApp:
 
     def __init__(self, master):
         self.master = master
-        self.master.title("RHILEX 扫描器")
+        self.master.title("RHILEX 网关扫描器")
 
         self.subnet_label = tk.Label(self.master, text="本地网络:")
         self.subnet_label.pack(pady=5, anchor="w")
@@ -57,6 +57,10 @@ class HostScannerApp:
 
         self.scan_button = tk.Button(self.master, text="开始扫描", command=self.start_scan)
         self.scan_button.pack(fill=tk.X, pady=10, anchor="w")
+
+        self.scan_button = tk.Button(self.master, text="访问官网", command=self.goto_homepage)
+        self.scan_button.pack(fill=tk.X, pady=10, anchor="w")
+
         self.center_window(500, 600)
 
     def add_buttons_to_listbox(self):
@@ -95,9 +99,9 @@ class HostScannerApp:
                 asyncio.open_connection(ip, port), timeout=timeout
             )
             writer.close()
-            return ip, port, "Open"
+            return ip, port, "SUCCESS"
         except asyncio.TimeoutError:
-            return ip, port, "Timeout"
+            return ip, port, "TIMEOUT"
         except Exception as e:
             return ip, port, f"Error - {e}"
 
@@ -129,11 +133,12 @@ class HostScannerApp:
         results = await asyncio.gather(*tasks)
         for ip, port, status in results:
             try:
-                if status == "Open":
+                if status == "SUCCESS":
                     result = f"{ip}:{port} - [{status}]"
                     self.ip_listbox.insert(tk.END, result)
                     self.log(
-                        f"Host {ip}:{port} is reachable on port 2580. Status: {status}"
+                        color="green",
+                        message=  f"网关 http://{ip}:{port} 扫描成功. Status: {status}"
                     )
             except ValueError:
                 self.log(f"Invalid response format for host {ip}:{port} - {status}")
@@ -152,12 +157,13 @@ class HostScannerApp:
         self.ip_listbox.delete(0, tk.END)
         self.log_text.delete(1.0, tk.END)
         self.progressbar["value"] = 0
+        asyncio.run(self.scan_network())
 
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.scan_network())
-
+    def goto_homepage(self):
+        webbrowser.open("https://www.hootrhino.com")
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.resizable(False, False)
     app = HostScannerApp(root)
     root.mainloop()

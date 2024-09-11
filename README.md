@@ -9,11 +9,11 @@
 ## 搭建环境
 开发环境用python3.11，注意环境安装正确。
 ```sh
-python3.11 -m venv venv
+python -m venv venv
 cd ./venv/Scripts
-./activate.bat
-pip3.11 install pyinstaller
-pip3.11 install -r ./deps.txt
+./Activate.ps1
+pip install pyinstaller
+pip install -r required.txt
 ```
 ## Build
 ```sh
